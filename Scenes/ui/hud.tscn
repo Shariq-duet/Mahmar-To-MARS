@@ -1,0 +1,760 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://Scenes/ui/hud.gd" id="1_hud"]
+[ext_resource type="Theme" path="res://Scenes/ui/hud_panel_theme.tres" id="2_theme"]
+[ext_resource type="Script" path="res://Scripts/ui/hud_bar.gd" id="3_bar"]
+[ext_resource type="Script" path="res://Scripts/ui/compass_strip.gd" id="4_compass"]
+[ext_resource type="Script" path="res://Scripts/ui/progress_ring.gd" id="5_ring"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_death"]
+bg_color = Color(0.12, 0.03, 0.03, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9, 0.2, 0.2, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_win"]
+bg_color = Color(0.03, 0.12, 0.05, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.9, 0.3, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopLeft" type="MarginContainer" parent="Control"]
+layout_mode = 0
+offset_right = 214.0
+offset_bottom = 160.0
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+
+[node name="SurvivalMeters" type="PanelContainer" parent="Control/TopLeft"]
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+theme = ExtResource("2_theme")
+
+[node name="Margin" type="MarginContainer" parent="Control/TopLeft/SurvivalMeters"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="VBox" type="VBoxContainer" parent="Control/TopLeft/SurvivalMeters/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Header" type="Label" parent="Control/TopLeft/SurvivalMeters/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.247059, 0.815686, 0.941176, 1)
+theme_override_font_sizes/font_size = 12
+text = "ASTRONAUT LIFE SYSTEMS"
+
+[node name="HealthBox" type="HBoxContainer" parent="Control/TopLeft/SurvivalMeters/Margin/VBox"]
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="Control/TopLeft/SurvivalMeters/Margin/VBox/HealthBox"]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "HEALTH"
+
+[node name="HealthBar" type="ProgressBar" parent="Control/TopLeft/SurvivalMeters/Margin/VBox/HealthBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 0.5
+value = 100.0
+show_percentage = false
+script = ExtResource("3_bar")
+
+[node name="HealthVal" type="Label" parent="Control/TopLeft/SurvivalMeters/Margin/VBox/HealthBox"]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "100%"
+horizontal_alignment = 2
+
+[node name="O2Box" type="HBoxContainer" parent="Control/TopLeft/SurvivalMeters/Margin/VBox"]
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="Control/TopLeft/SurvivalMeters/Margin/VBox/O2Box"]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "OXYGEN"
+
+[node name="O2Bar" type="ProgressBar" parent="Control/TopLeft/SurvivalMeters/Margin/VBox/O2Box"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 0.5
+value = 100.0
+show_percentage = false
+script = ExtResource("3_bar")
+
+[node name="O2Val" type="Label" parent="Control/TopLeft/SurvivalMeters/Margin/VBox/O2Box"]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "100%"
+horizontal_alignment = 2
+
+[node name="SuitBox" type="HBoxContainer" parent="Control/TopLeft/SurvivalMeters/Margin/VBox"]
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="Control/TopLeft/SurvivalMeters/Margin/VBox/SuitBox"]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "SUIT"
+
+[node name="SuitBar" type="ProgressBar" parent="Control/TopLeft/SurvivalMeters/Margin/VBox/SuitBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 0.5
+value = 100.0
+show_percentage = false
+script = ExtResource("3_bar")
+
+[node name="SuitVal" type="Label" parent="Control/TopLeft/SurvivalMeters/Margin/VBox/SuitBox"]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "100%"
+horizontal_alignment = 2
+
+[node name="JetpackBox" type="HBoxContainer" parent="Control/TopLeft/SurvivalMeters/Margin/VBox"]
+visible = false
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="Control/TopLeft/SurvivalMeters/Margin/VBox/JetpackBox"]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "JETPACK"
+
+[node name="JetpackBar" type="ProgressBar" parent="Control/TopLeft/SurvivalMeters/Margin/VBox/JetpackBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 0.5
+value = 100.0
+show_percentage = false
+script = ExtResource("3_bar")
+
+[node name="JetpackVal" type="Label" parent="Control/TopLeft/SurvivalMeters/Margin/VBox/JetpackBox"]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "100%"
+horizontal_alignment = 2
+
+[node name="TopRight" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -214.0
+offset_bottom = 140.0
+grow_horizontal = 0
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+
+[node name="BaseMeters" type="PanelContainer" parent="Control/TopRight"]
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+theme = ExtResource("2_theme")
+
+[node name="Margin" type="MarginContainer" parent="Control/TopRight/BaseMeters"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="VBox" type="VBoxContainer" parent="Control/TopRight/BaseMeters/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Header" type="Label" parent="Control/TopRight/BaseMeters/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.247059, 0.815686, 0.941176, 1)
+theme_override_font_sizes/font_size = 12
+text = "HABITAT OUTPOST"
+
+[node name="PowerBox" type="HBoxContainer" parent="Control/TopRight/BaseMeters/Margin/VBox"]
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="Control/TopRight/BaseMeters/Margin/VBox/PowerBox"]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "POWER"
+
+[node name="PowerBar" type="ProgressBar" parent="Control/TopRight/BaseMeters/Margin/VBox/PowerBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 0.5
+value = 100.0
+show_percentage = false
+script = ExtResource("3_bar")
+
+[node name="PowerVal" type="Label" parent="Control/TopRight/BaseMeters/Margin/VBox/PowerBox"]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "100%"
+horizontal_alignment = 2
+
+[node name="WaterBox" type="HBoxContainer" parent="Control/TopRight/BaseMeters/Margin/VBox"]
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="Control/TopRight/BaseMeters/Margin/VBox/WaterBox"]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "WATER"
+
+[node name="WaterBar" type="ProgressBar" parent="Control/TopRight/BaseMeters/Margin/VBox/WaterBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 0.5
+value = 100.0
+show_percentage = false
+script = ExtResource("3_bar")
+
+[node name="WaterVal" type="Label" parent="Control/TopRight/BaseMeters/Margin/VBox/WaterBox"]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "100%"
+horizontal_alignment = 2
+
+[node name="FoodBox" type="HBoxContainer" parent="Control/TopRight/BaseMeters/Margin/VBox"]
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="Control/TopRight/BaseMeters/Margin/VBox/FoodBox"]
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "FOOD"
+
+[node name="FoodBar" type="ProgressBar" parent="Control/TopRight/BaseMeters/Margin/VBox/FoodBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 0.5
+value = 100.0
+show_percentage = false
+script = ExtResource("3_bar")
+
+[node name="FoodVal" type="Label" parent="Control/TopRight/BaseMeters/Margin/VBox/FoodBox"]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "100%"
+horizontal_alignment = 2
+
+[node name="TopCenter" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -230.0
+offset_top = 24.0
+offset_right = 230.0
+offset_bottom = 86.0
+grow_horizontal = 2
+theme_override_constants/separation = 4
+
+[node name="CompassStrip" type="Control" parent="Control/TopCenter"]
+custom_minimum_size = Vector2(460, 26)
+layout_mode = 2
+script = ExtResource("4_compass")
+
+[node name="SolPanel" type="PanelContainer" parent="Control/TopCenter"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_theme")
+
+[node name="Margin" type="MarginContainer" parent="Control/TopCenter/SolPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 2
+
+[node name="SolLabel" type="Label" parent="Control/TopCenter/SolPanel/Margin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+text = "☀️ SOL 1"
+horizontal_alignment = 1
+
+[node name="BottomLeft" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -180.0
+offset_right = 340.0
+grow_vertical = 0
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBox" type="VBoxContainer" parent="Control/BottomLeft"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SignalsPanel" type="PanelContainer" parent="Control/BottomLeft/VBox"]
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+theme = ExtResource("2_theme")
+
+[node name="Margin" type="MarginContainer" parent="Control/BottomLeft/VBox/SignalsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="VBox" type="VBoxContainer" parent="Control/BottomLeft/VBox/SignalsPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="SignalsHeader" type="Label" parent="Control/BottomLeft/VBox/SignalsPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.247059, 0.815686, 0.941176, 1)
+theme_override_font_sizes/font_size = 12
+text = "DISCOVERED SIGNALS"
+
+[node name="ListContainer" type="VBoxContainer" parent="Control/BottomLeft/VBox/SignalsPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="LegacySignalLabel" type="Label" parent="Control/BottomLeft/VBox/SignalsPanel/Margin/VBox"]
+visible = false
+layout_mode = 2
+
+[node name="InventoryPanel" type="PanelContainer" parent="Control/BottomLeft/VBox"]
+layout_mode = 2
+theme = ExtResource("2_theme")
+
+[node name="Margin" type="MarginContainer" parent="Control/BottomLeft/VBox/InventoryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="InventoryLabel" type="Label" parent="Control/BottomLeft/VBox/InventoryPanel/Margin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.247059, 0.815686, 0.941176, 1)
+theme_override_font_sizes/font_size = 12
+text = "FILTER CORE: 0    POWER CORE: 0    WATER ICE: 0"
+
+[node name="BottomCenter" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -90.0
+offset_right = 250.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 6
+
+[node name="AlertBanner" type="PanelContainer" parent="Control/BottomCenter"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_theme")
+
+[node name="Margin" type="MarginContainer" parent="Control/BottomCenter/AlertBanner"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 4
+
+[node name="AlertText" type="Label" parent="Control/BottomCenter/AlertBanner/Margin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.247059, 0.815686, 0.941176, 1)
+theme_override_font_sizes/font_size = 13
+text = "Alert message..."
+horizontal_alignment = 1
+
+[node name="ObjectiveBanner" type="PanelContainer" parent="Control/BottomCenter"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_theme")
+
+[node name="Margin" type="MarginContainer" parent="Control/BottomCenter/ObjectiveBanner"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 4
+
+[node name="ObjectiveLabel" type="Label" parent="Control/BottomCenter/ObjectiveBanner/Margin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+text = "🎯 CURRENT OBJECTIVE: REACH SURVIVAL POD"
+horizontal_alignment = 1
+
+[node name="CenterPrompt" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = 40.0
+offset_right = 100.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 4
+
+[node name="ProgressRing" type="Control" parent="Control/CenterPrompt"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("5_ring")
+
+[node name="PromptLabel" type="Label" parent="Control/CenterPrompt"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.247059, 0.815686, 0.941176, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 13
+text = "[E] TAKE FILTER CORE"
+horizontal_alignment = 1
+
+[node name="JetpackOnlineBanner" type="PanelContainer" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -60.0
+offset_right = 150.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="Margin" type="MarginContainer" parent="Control/JetpackOnlineBanner"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 6
+
+[node name="Label" type="Label" parent="Control/JetpackOnlineBanner/Margin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.247059, 0.815686, 0.941176, 1)
+theme_override_font_sizes/font_size = 13
+text = "🚀 JETPACK SYSTEM ONLINE"
+horizontal_alignment = 1
+
+[node name="FadeOverlay" type="ColorRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="PauseMenu" type="PanelContainer" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -180.0
+offset_right = 220.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="Margin" type="MarginContainer" parent="Control/PauseMenu"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="Control/PauseMenu/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Control/PauseMenu/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.247059, 0.815686, 0.941176, 1)
+theme_override_font_sizes/font_size = 16
+text = "MISSION PAUSED"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Control/PauseMenu/Margin/VBox"]
+layout_mode = 2
+
+[node name="ResumeBtn" type="Button" parent="Control/PauseMenu/Margin/VBox"]
+layout_mode = 2
+text = "Resume Mission (ESC)"
+
+[node name="LorePopup" type="PanelContainer" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -140.0
+offset_right = 240.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="Margin" type="MarginContainer" parent="Control/LorePopup"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="Control/LorePopup/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="LoreTitle" type="Label" parent="Control/LorePopup/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.247059, 0.815686, 0.941176, 1)
+theme_override_font_sizes/font_size = 16
+text = "🛰️ DISCOVERED ARTIFACT"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Control/LorePopup/Margin/VBox"]
+layout_mode = 2
+
+[node name="LoreBody" type="Label" parent="Control/LorePopup/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Historical mission lore..."
+autowrap_mode = 2
+
+[node name="LorePart" type="Label" parent="Control/LorePopup/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+text = "Recovered Part"
+autowrap_mode = 2
+
+[node name="CloseLoreBtn" type="Button" parent="Control/LorePopup/Margin/VBox"]
+layout_mode = 2
+text = "Collect & Continue (E)"
+
+[node name="DeathScreen" type="PanelContainer" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -100.0
+offset_right = 220.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_death")
+
+[node name="Margin" type="MarginContainer" parent="Control/DeathScreen"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="Control/DeathScreen/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Control/DeathScreen/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.25, 1)
+theme_override_font_sizes/font_size = 20
+text = "❌ MISSION FAILED"
+horizontal_alignment = 1
+
+[node name="DeathReason" type="Label" parent="Control/DeathScreen/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Cause: Oxygen Depletion"
+horizontal_alignment = 1
+
+[node name="RestartBtn" type="Button" parent="Control/DeathScreen/Margin/VBox"]
+layout_mode = 2
+text = "🔄 Try Mission Again"
+
+[node name="WinScreen" type="PanelContainer" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -120.0
+offset_right = 260.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_win")
+
+[node name="Margin" type="MarginContainer" parent="Control/WinScreen"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="Control/WinScreen/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="WinTitle" type="Label" parent="Control/WinScreen/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.95, 0.4, 1)
+theme_override_font_sizes/font_size = 20
+text = "🎉 MISSION ACCOMPLISHED!"
+horizontal_alignment = 1
+
+[node name="WinBody" type="Label" parent="Control/WinScreen/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "You repaired the Mars Ascent Vehicle and launched safely home!"
+horizontal_alignment = 1
+
+[node name="WinRestartBtn" type="Button" parent="Control/WinScreen/Margin/VBox"]
+layout_mode = 2
+text = "🚀 Play Again"
+
+[node name="PlacementDialog" type="PanelContainer" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -110.0
+offset_right = 210.0
+offset_bottom = 110.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="Margin" type="MarginContainer" parent="Control/PlacementDialog"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="Control/PlacementDialog/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Control/PlacementDialog/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.247059, 0.815686, 0.941176, 1)
+theme_override_font_sizes/font_size = 14
+text = "📍 RECORD SURFACE LOCATION (KEY P)"
+horizontal_alignment = 1
+
+[node name="CoordsLabel" type="Label" parent="Control/PlacementDialog/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.85, 0.95, 0.8)
+theme_override_font_sizes/font_size = 11
+text = "Position: (0.0, 0.0, 0.0)"
+horizontal_alignment = 1
+
+[node name="NameInput" type="LineEdit" parent="Control/PlacementDialog/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+placeholder_text = "Enter marker name (e.g. oxygen_cache)..."
+clear_button_enabled = true
+
+[node name="BtnBox" type="HBoxContainer" parent="Control/PlacementDialog/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="SaveBtn" type="Button" parent="Control/PlacementDialog/Margin/VBox/BtnBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "💾 Save Location"
+
+[node name="CancelBtn" type="Button" parent="Control/PlacementDialog/Margin/VBox/BtnBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"
+
+[connection signal="pressed" from="Control/PauseMenu/Margin/VBox/ResumeBtn" to="." method="toggle_pause"]
+[connection signal="pressed" from="Control/LorePopup/Margin/VBox/CloseLoreBtn" to="." method="close_lore_popup"]
+[connection signal="pressed" from="Control/DeathScreen/Margin/VBox/RestartBtn" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="Control/WinScreen/Margin/VBox/WinRestartBtn" to="." method="_on_restart_pressed"]

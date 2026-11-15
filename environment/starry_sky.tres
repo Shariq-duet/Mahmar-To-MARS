@@ -1,0 +1,14 @@
+[gd_resource type="Sky" format=3 uid="uid://4rbdbr0twmtg"]
+
+[ext_resource type="Shader" uid="uid://8xb3gfmgx6me" path="res://environment/sky.gdshader" id="1_sky_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
+shader = ExtResource("1_sky_shader")
+shader_parameter/deep_space_color = Color(0.003, 0.004, 0.008, 1)
+shader_parameter/milky_way_color = Color(0.06, 0.055, 0.08, 1)
+shader_parameter/star_density = 57.3
+shader_parameter/star_intensity = 3.5
+shader_parameter/milky_way_intensity = 1.0
+
+[resource]
+sky_material = SubResource("ShaderMaterial_sky")

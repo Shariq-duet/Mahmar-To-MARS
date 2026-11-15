@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/planet/planet_generator.gd" id="1_generator"]
+
+[node name="ProceduralMars" type="Node3D"]
+script = ExtResource("1_generator")
+radius = 500.0
+resolution = 64
+height_scale = 22.0
+planet_seed = 1337
+crater_count = 90
+crater_min_radius = 0.025
+crater_max_radius = 0.12
+crater_depth = 0.35
+rim_height = 0.1

@@ -1,0 +1,193 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/machines/crashed_pod.gd" id="1_pod"]
+[ext_resource type="PackedScene" path="res://Scenes/machines/scifi_pod_model.tscn" id="2_pod_model"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_shelter"]
+size = Vector3(1.5, 3.5, 1.4)
+
+[sub_resource type="StandardMaterial3D" id="Material_solar"]
+albedo_color = Color(0.05, 0.15, 0.45, 1)
+roughness = 0.2
+metallic = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_solar"]
+material = SubResource("Material_solar")
+size = Vector3(4.0, 0.1, 2.5)
+
+[sub_resource type="StandardMaterial3D" id="Material_smoke"]
+transparency = 1
+albedo_color = Color(0.4, 0.35, 0.3, 0.5)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_smoke"]
+direction = Vector3(0, 1, 0)
+spread = 30.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.5
+gravity = Vector3(0, 0.5, 0)
+scale_min = 0.4
+scale_max = 1.2
+
+[sub_resource type="SphereMesh" id="SphereMesh_smoke"]
+material = SubResource("Material_smoke")
+radius = 0.3
+height = 0.6
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(2.4, 0.4, 2.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_back_wall"]
+size = Vector3(2.2, 5.0, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_side_wall"]
+size = Vector3(0.3, 5.0, 2.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_front_wall"]
+size = Vector3(0.7, 5.0, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ceiling"]
+size = Vector3(2.6, 0.4, 2.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_machine_zone"]
+size = Vector3(1.3, 2.5, 1.3)
+
+[node name="CrashedPod" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_pod")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 1.08)
+shape = SubResource("BoxShape3D_shelter")
+
+[node name="PodModel" parent="." instance=ExtResource("2_pod_model")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 0, 0, 0, 0.003, 0, -0.1619, 0)
+
+[node name="DeployedSolar" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+visible = false
+
+[node name="SolarPanel1" type="MeshInstance3D" parent="DeployedSolar"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 1.5, -2)
+mesh = SubResource("BoxMesh_solar")
+
+[node name="SolarPanel2" type="MeshInstance3D" parent="DeployedSolar"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 1.5, 2)
+mesh = SubResource("BoxMesh_solar")
+
+[node name="CrashSmoke" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 1.8, -1.5)
+amount = 16
+lifetime = 2.0
+process_material = SubResource("ParticleProcessMaterial_smoke")
+draw_pass_1 = SubResource("SphereMesh_smoke")
+
+[node name="PromptLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0)
+billboard = 1
+text = "📦 Survival Pod (Crash Site)"
+font_size = 28
+
+[node name="InteriorFloor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.02, 0.1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteriorFloor"]
+shape = SubResource("BoxShape3D_floor")
+
+[node name="InteriorWalls" type="StaticBody3D" parent="."]
+
+[node name="BackWall" type="CollisionShape3D" parent="InteriorWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -1.35)
+shape = SubResource("BoxShape3D_back_wall")
+
+[node name="LeftWall" type="CollisionShape3D" parent="InteriorWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.35, 2.5, 0)
+shape = SubResource("BoxShape3D_side_wall")
+
+[node name="RightWall" type="CollisionShape3D" parent="InteriorWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 2.5, 0)
+shape = SubResource("BoxShape3D_side_wall")
+
+[node name="FrontWallLeft" type="CollisionShape3D" parent="InteriorWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 2.5, 1.15)
+shape = SubResource("BoxShape3D_front_wall")
+
+[node name="FrontWallRight" type="CollisionShape3D" parent="InteriorWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0, 2.5, 1.15)
+shape = SubResource("BoxShape3D_front_wall")
+
+[node name="Ceiling" type="CollisionShape3D" parent="InteriorWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.0, 0)
+shape = SubResource("BoxShape3D_ceiling")
+
+[node name="OxygenScrubber" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 1.0, -0.6)
+
+[node name="RedGlowLight" type="OmniLight3D" parent="OxygenScrubber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+light_color = Color(1, 0.15, 0.08, 1)
+light_energy = 1.5
+omni_range = 2.5
+
+[node name="InteractZone" type="Area3D" parent="OxygenScrubber"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="OxygenScrubber/InteractZone"]
+shape = SubResource("BoxShape3D_machine_zone")
+
+[node name="PromptLabel" type="Label3D" parent="OxygenScrubber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+visible = false
+billboard = 1
+text = "Oxygen Scrubber
+[E] Inspect"
+font_size = 20
+
+[node name="PowerUnit" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, -0.9)
+
+[node name="RedGlowLight" type="OmniLight3D" parent="PowerUnit"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+light_color = Color(1, 0.15, 0.08, 1)
+light_energy = 1.2
+omni_range = 2.2
+
+[node name="InteractZone" type="Area3D" parent="PowerUnit"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PowerUnit/InteractZone"]
+shape = SubResource("BoxShape3D_machine_zone")
+
+[node name="PromptLabel" type="Label3D" parent="PowerUnit"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+visible = false
+billboard = 1
+text = "Power Unit
+[E] Inspect"
+font_size = 20
+
+[node name="WaterTank" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.0, -0.6)
+
+[node name="RedGlowLight" type="OmniLight3D" parent="WaterTank"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+light_color = Color(1, 0.15, 0.08, 1)
+light_energy = 1.2
+omni_range = 2.2
+
+[node name="InteractZone" type="Area3D" parent="WaterTank"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WaterTank/InteractZone"]
+shape = SubResource("BoxShape3D_machine_zone")
+
+[node name="PromptLabel" type="Label3D" parent="WaterTank"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+visible = false
+billboard = 1
+text = "Water Tank
+[E] Inspect"
+font_size = 20

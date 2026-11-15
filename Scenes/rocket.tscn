@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://df70y6mkgb8qv"]
+
+[ext_resource type="PackedScene" path="res://Assets/rocket_ship.glb" id="1_mesh"]
+
+[node name="Rocket" type="Node3D"]
+
+[node name="RocketMesh" parent="." instance=ExtResource("1_mesh")]
+transform = Transform3D(5.5, 0, 0, 0, 5.5, 0, 0, 0, 5.5, -0.60041, -3.03171, 14.07083)
+
+[node name="EngineMarker" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.256, 0)

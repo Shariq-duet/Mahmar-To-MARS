@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scripts/artifacts/mission_artifact.gd" id="1_artifact"]
+[ext_resource type="PackedScene" path="res://Assets/Models/satelliteDish_large.glb" id="2_probe"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_artifact"]
+radius = 4.0
+
+[sub_resource type="StandardMaterial3D" id="Material_beacon_glow"]
+albedo_color = Color(0.2, 0.85, 1, 1)
+emission_enabled = true
+emission = Color(0.2, 0.85, 1, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_beacon"]
+material = SubResource("Material_beacon_glow")
+top_radius = 0.1
+bottom_radius = 0.3
+height = 2.5
+
+[node name="ArtifactMarker" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_artifact")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_artifact")
+
+[node name="ProbeModel" parent="." instance=ExtResource("2_probe")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+
+[node name="BeaconPylon" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+mesh = SubResource("CylinderMesh_beacon")
+
+[node name="BeaconLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+light_color = Color(0.2, 0.85, 1, 1)
+light_energy = 2.0
+omni_range = 8.0
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
+billboard = 1
+text = "🛰️ Historic NASA Probe"
+font_size = 28

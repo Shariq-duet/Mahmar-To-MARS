@@ -1,0 +1,122 @@
+{
+	"cargo_site": {
+		"debug_color": "50e050ff",
+		"direction": [
+			-0.243594229221344,
+			0.945891559123993,
+			-0.214362025260925
+		],
+		"height_offset": 0.0,
+		"name": "cargo_site",
+		"scene_path": "res://Scenes/machines/space_cargo.tscn",
+		"yaw": 0.0
+	},
+	"crash_base": {
+		"debug_color": "e0a030ff",
+		"direction": [
+			-0.140145093202591,
+			0.986023664474487,
+			0.0900930613279343
+		],
+		"height_offset": 0.0,
+		"name": "crash_base",
+		"scene_path": "res://Scenes/machines/crash_base.tscn",
+		"yaw": 0.0
+	},
+	"home": {
+		"debug_color": "3fd0f0ff",
+		"direction": [
+			-0.061628,
+			0.996195,
+			-0.061628
+		],
+		"height_offset": 0.0,
+		"name": "home",
+		"scene_path": "res://Scenes/machines/crashed_pod.tscn",
+		"yaw": 0.0
+	},
+	"mav_rocket": {
+		"debug_color": "f0a830ff",
+		"direction": [
+			0.0,
+			1.0,
+			0.0
+		],
+		"height_offset": 0.0,
+		"name": "mav_rocket",
+		"scene_path": "res://Scenes/machines/return_vehicle.tscn",
+		"yaw": 0.0
+	},
+	"noctis_chasm": {
+		"debug_color": "b040d0ff",
+		"direction": [
+			0.240905165672302,
+			0.953582584857941,
+			0.180679112672806
+		],
+		"height_offset": 0.0,
+		"name": "noctis_chasm",
+		"scene_path": "",
+		"yaw": 0.0
+	},
+	"oxygen_marker": {
+		"debug_color": "3fd0f0ff",
+		"direction": [
+			-0.488248765468597,
+			0.808819472789764,
+			0.327756315469742
+		],
+		"height_offset": 0.0,
+		"name": "oxygen_marker",
+		"scene_path": "",
+		"yaw": 0.0
+	},
+	"pod": {
+		"debug_color": "33ccffff",
+		"direction": [
+			-0.061628,
+			0.996195,
+			-0.061628
+		],
+		"height_offset": 0.0,
+		"name": "pod",
+		"scene_path": "res://Scenes/machines/crashed_pod.tscn",
+		"yaw": 0.0
+	},
+	"rover_site": {
+		"debug_color": "e0a030ff",
+		"direction": [
+			-0.0805041790008545,
+			0.972350478172302,
+			0.219211384654045
+		],
+		"height_offset": 0.0,
+		"name": "rover_site",
+		"scene_path": "res://Scenes/machines/rover_site.tscn",
+		"yaw": 0.0
+	},
+	"rovermarket": {
+		"debug_color": "3fd0f0ff",
+		"direction": [
+			-0.474287807941437,
+			0.87787789106369,
+			-0.0661924704909325
+		],
+		"height_offset": 0.0,
+		"name": "rovermarket",
+		"scene_path": "",
+		"yaw": 0.0
+	},
+	"water_deposit": {
+		"debug_color": "3fd0f0ff",
+		"direction": [
+			0.0511020570993423,
+			0.976039290428162,
+			0.211508512496948
+		],
+		"height_offset": 0.0,
+		"name": "water_deposit",
+		"scene_path": "",
+		"yaw": 0.0
+	}
+}

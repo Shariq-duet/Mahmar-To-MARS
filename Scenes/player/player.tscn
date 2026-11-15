@@ -1,0 +1,64 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://Scripts/player/planet_walker.gd" id="1_walker"]
+[ext_resource type="PackedScene" path="res://Scenes/player/astronaut_model.tscn" id="2_astro"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
+radius = 0.4
+height = 1.9
+
+[sub_resource type="StandardMaterial3D" id="Material_jet"]
+albedo_color = Color(0.2, 0.7, 1.0, 1)
+emission_enabled = true
+emission = Color(0.2, 0.8, 1.0, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_thruster"]
+direction = Vector3(0, -1, 0)
+spread = 20.0
+initial_velocity_min = 2.0
+initial_velocity_max = 4.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.08
+scale_max = 0.15
+
+[sub_resource type="SphereMesh" id="SphereMesh_particle"]
+material = SubResource("Material_jet")
+radius = 0.08
+height = 0.16
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+collision_layer = 2
+collision_mask = 1
+floor_snap_length = 0.8
+floor_max_angle = 1.13446
+script = ExtResource("1_walker")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+shape = SubResource("CapsuleShape3D_player")
+
+[node name="VisualMesh" type="Node3D" parent="."]
+
+[node name="Astronaut" parent="VisualMesh" instance=ExtResource("2_astro")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="JetpackParticles" type="GPUParticles3D" parent="VisualMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0.35)
+emitting = false
+amount = 24
+lifetime = 0.3
+preprocess = 0.05
+process_material = SubResource("ParticleProcessMaterial_thruster")
+draw_pass_1 = SubResource("SphereMesh_particle")
+
+[node name="CameraArm" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraArm"]
+spring_length = 4.5
+margin = 0.2
+
+[node name="Camera3D" type="Camera3D" parent="CameraArm/SpringArm3D"]
+current = true
+fov = 75.0

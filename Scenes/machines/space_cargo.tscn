@@ -1,0 +1,77 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://Scripts/machines/space_cargo.gd" id="1_cargo_script"]
+[ext_resource type="PackedScene" path="res://models/space_cargo/space_cargo_transporter.glb" id="2_cargo_model"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_pickup_zone"]
+radius = 2.2
+
+[sub_resource type="StandardMaterial3D" id="Material_filter_core"]
+albedo_color = Color(0.2, 0.85, 0.95, 1)
+metallic = 0.5
+roughness = 0.2
+emission_enabled = true
+emission = Color(0.2, 0.85, 0.95, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_filter_core"]
+material = SubResource("Material_filter_core")
+size = Vector3(0.6, 0.6, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="Material_power_core"]
+albedo_color = Color(0.95, 0.7, 0.15, 1)
+metallic = 0.6
+roughness = 0.2
+emission_enabled = true
+emission = Color(0.95, 0.7, 0.15, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_power_core"]
+material = SubResource("Material_power_core")
+top_radius = 0.3
+bottom_radius = 0.3
+height = 0.6
+
+[node name="SpaceCargo" type="Node3D"]
+script = ExtResource("1_cargo_script")
+
+[node name="CargoModel" parent="." instance=ExtResource("2_cargo_model")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="FilterCorePickup" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0.65, 0.0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FilterCorePickup"]
+shape = SubResource("SphereShape3D_pickup_zone")
+
+[node name="CoreMesh" type="MeshInstance3D" parent="FilterCorePickup"]
+mesh = SubResource("BoxMesh_filter_core")
+
+[node name="PromptLabel" type="Label3D" parent="FilterCorePickup"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+visible = false
+billboard = 1
+text = "Filter Core
+[E] Take"
+font_size = 22
+
+[node name="PowerCorePickup" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0.65, 0.0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PowerCorePickup"]
+shape = SubResource("SphereShape3D_pickup_zone")
+
+[node name="CoreMesh" type="MeshInstance3D" parent="PowerCorePickup"]
+mesh = SubResource("CylinderMesh_power_core")
+
+[node name="PromptLabel" type="Label3D" parent="PowerCorePickup"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+visible = false
+billboard = 1
+text = "Power Unit Core
+[E] Recover"
+font_size = 22

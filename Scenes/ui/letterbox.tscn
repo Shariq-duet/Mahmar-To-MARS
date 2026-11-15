@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/ui/letterbox.gd" id="1_letterbox"]
+
+[node name="Letterbox" type="CanvasLayer"]
+layer = 15
+script = ExtResource("1_letterbox")
+
+[node name="TopBar" type="ColorRect" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+color = Color(0, 0, 0, 1)
+
+[node name="BottomBar" type="ColorRect" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 1)

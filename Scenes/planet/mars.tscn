@@ -1,0 +1,357 @@
+[gd_scene load_steps=34 format=3]
+
+[ext_resource type="Script" path="res://Scripts/planet/PlanetGravity.gd" id="1_gravity"]
+[ext_resource type="Script" path="res://Scripts/planet/POIMarker.gd" id="2_poi"]
+[ext_resource type="Script" path="res://Scripts/planet/OutpostTerminal.gd" id="3_terminal"]
+[ext_resource type="PackedScene" path="res://Assets/Models/rover.glb" id="4_rover"]
+[ext_resource type="PackedScene" path="res://Assets/Models/satelliteDish_large.glb" id="5_dish"]
+[ext_resource type="PackedScene" path="res://Assets/Models/machine_generatorLarge.glb" id="6_gen"]
+[ext_resource type="PackedScene" path="res://Assets/Models/machine_wireless.glb" id="7_shield"]
+[ext_resource type="PackedScene" path="res://Assets/Models/craft_miner.glb" id="8_miner"]
+[ext_resource type="PackedScene" path="res://Assets/Models/machine_barrelLarge.glb" id="9_barrel"]
+[ext_resource type="PackedScene" path="res://Assets/Models/desk_computerScreen.glb" id="10_desk"]
+[ext_resource type="PackedScene" path="res://Assets/Models/rocket_baseA.glb" id="11_rocket_base"]
+[ext_resource type="PackedScene" path="res://Assets/Models/rocket_fuelA.glb" id="12_rocket_fuel"]
+[ext_resource type="PackedScene" path="res://Assets/Models/rocket_topA.glb" id="13_rocket_top"]
+[ext_resource type="PackedScene" path="res://Assets/Models/craterLarge.glb" id="14_crater"]
+[ext_resource type="PackedScene" path="res://Assets/Models/rock_crystalsLargeA.glb" id="15_crystals"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ground"]
+radius = 300.0
+
+[sub_resource type="StandardMaterial3D" id="Material_mars_surface"]
+albedo_color = Color(0.78, 0.29, 0.12, 1)
+roughness = 0.94
+metallic = 0.05
+
+[sub_resource type="SphereMesh" id="SphereMesh_mars"]
+material = SubResource("Material_mars_surface")
+radius = 300.0
+height = 600.0
+radial_segments = 96
+rings = 48
+
+[sub_resource type="StandardMaterial3D" id="Material_atmosphere"]
+transparency = 1
+blend_mode = 1
+cull_mode = 1
+albedo_color = Color(0.92, 0.45, 0.2, 0.16)
+emission_enabled = true
+emission = Color(0.85, 0.38, 0.12, 1)
+emission_energy_multiplier = 0.35
+
+[sub_resource type="SphereMesh" id="SphereMesh_atmosphere"]
+material = SubResource("Material_atmosphere")
+radius = 320.0
+height = 640.0
+radial_segments = 64
+rings = 32
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_gravity"]
+radius = 650.0
+
+[sub_resource type="StandardMaterial3D" id="Material_metal_dark"]
+albedo_color = Color(0.22, 0.24, 0.28, 1)
+roughness = 0.5
+metallic = 0.7
+
+[sub_resource type="StandardMaterial3D" id="Material_dome_glass"]
+transparency = 1
+albedo_color = Color(0.8, 0.92, 1.0, 0.55)
+roughness = 0.1
+metallic = 0.3
+
+[sub_resource type="SphereMesh" id="SphereMesh_main_dome"]
+material = SubResource("Material_dome_glass")
+radius = 8.0
+height = 8.0
+is_hemisphere = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_dome_rim"]
+material = SubResource("Material_metal_dark")
+top_radius = 8.2
+bottom_radius = 8.2
+height = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Material_metal_white"]
+albedo_color = Color(0.9, 0.92, 0.95, 1)
+roughness = 0.35
+metallic = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_corridor"]
+material = SubResource("Material_metal_white")
+size = Vector3(2.5, 2.2, 6.0)
+
+[sub_resource type="StandardMaterial3D" id="Material_greenhouse_glass"]
+transparency = 1
+albedo_color = Color(0.4, 0.95, 0.6, 0.5)
+roughness = 0.1
+metallic = 0.2
+
+[sub_resource type="SphereMesh" id="SphereMesh_greenhouse_dome"]
+material = SubResource("Material_greenhouse_glass")
+radius = 6.0
+height = 6.0
+is_hemisphere = true
+
+[sub_resource type="StandardMaterial3D" id="Material_crops"]
+albedo_color = Color(0.2, 0.8, 0.25, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_planters"]
+material = SubResource("Material_crops")
+size = Vector3(3.5, 0.5, 1.5)
+
+[sub_resource type="StandardMaterial3D" id="Material_solar_blue"]
+albedo_color = Color(0.04, 0.14, 0.42, 1)
+roughness = 0.15
+metallic = 0.85
+
+[sub_resource type="BoxMesh" id="BoxMesh_solar_panel"]
+material = SubResource("Material_solar_blue")
+size = Vector3(4.0, 0.1, 2.2)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_solar_post"]
+material = SubResource("Material_metal_dark")
+top_radius = 0.12
+bottom_radius = 0.15
+height = 2.0
+
+[sub_resource type="StandardMaterial3D" id="Material_pad"]
+albedo_color = Color(0.3, 0.32, 0.35, 1)
+roughness = 0.85
+metallic = 0.2
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_landing_pad"]
+material = SubResource("Material_pad")
+top_radius = 12.0
+bottom_radius = 12.0
+height = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_terminal_zone"]
+radius = 3.5
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_poi"]
+radius = 6.0
+
+[sub_resource type="StandardMaterial3D" id="Material_beacon_blue"]
+albedo_color = Color(0.2, 0.8, 1.0, 1)
+emission_enabled = true
+emission = Color(0.2, 0.8, 1.0, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_beacon_blue"]
+material = SubResource("Material_beacon_blue")
+top_radius = 0.12
+bottom_radius = 0.35
+height = 2.5
+
+[node name="Mars" type="Node3D"]
+script = ExtResource("1_gravity")
+planet_name = "Mars"
+planet_radius = 300.0
+atmosphere_radius = 550.0
+gravity_strength = 5.8
+
+[node name="SurfaceCollider" type="StaticBody3D" parent="."]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SurfaceCollider"]
+shape = SubResource("SphereShape3D_ground")
+
+[node name="SurfaceMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_mars")
+
+[node name="AtmosphereMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_atmosphere")
+
+[node name="GravityArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+space_override = 3
+gravity_point = true
+gravity_point_center = Vector3(0, 0, 0)
+gravity_direction = Vector3(0, 0, 0)
+gravity = 5.8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GravityArea"]
+shape = SubResource("SphereShape3D_gravity")
+
+[node name="BaseCamp" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 300, 0)
+
+[node name="HabitatHub" type="Node3D" parent="BaseCamp"]
+
+[node name="CentralDome" type="MeshInstance3D" parent="BaseCamp/HabitatHub"]
+mesh = SubResource("SphereMesh_main_dome")
+
+[node name="DomeRim" type="MeshInstance3D" parent="BaseCamp/HabitatHub"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+mesh = SubResource("CylinderMesh_dome_rim")
+
+[node name="Airlock" type="MeshInstance3D" parent="BaseCamp/HabitatHub"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 7.5)
+mesh = SubResource("BoxMesh_corridor")
+
+[node name="InteriorLight" type="OmniLight3D" parent="BaseCamp/HabitatHub"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0)
+light_color = Color(0.85, 0.95, 1, 1)
+light_energy = 2.5
+omni_range = 14.0
+
+[node name="OutpostTerminalZone" type="Area3D" parent="BaseCamp/HabitatHub"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("3_terminal")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BaseCamp/HabitatHub/OutpostTerminalZone"]
+shape = SubResource("SphereShape3D_terminal_zone")
+
+[node name="TerminalModel" parent="BaseCamp/HabitatHub/OutpostTerminalZone" instance=ExtResource("10_desk")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
+
+[node name="PromptLabel" type="Label3D" parent="BaseCamp/HabitatHub/OutpostTerminalZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+billboard = 1
+text = "Press E to Access Console"
+font_size = 32
+
+[node name="ScreenLight" type="OmniLight3D" parent="BaseCamp/HabitatHub/OutpostTerminalZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.5)
+light_color = Color(0.2, 0.85, 1, 1)
+light_energy = 1.5
+omni_range = 4.0
+
+[node name="BioDomeGreenhouse" type="Node3D" parent="BaseCamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 4)
+
+[node name="GreenhouseDome" type="MeshInstance3D" parent="BaseCamp/BioDomeGreenhouse"]
+mesh = SubResource("SphereMesh_greenhouse_dome")
+
+[node name="ConnectingTunnel" type="MeshInstance3D" parent="BaseCamp/BioDomeGreenhouse"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5, 1.1, -2)
+mesh = SubResource("BoxMesh_corridor")
+
+[node name="HydroponicRow1" type="MeshInstance3D" parent="BaseCamp/BioDomeGreenhouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -1.5)
+mesh = SubResource("BoxMesh_planters")
+
+[node name="HydroponicRow2" type="MeshInstance3D" parent="BaseCamp/BioDomeGreenhouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 1.5)
+mesh = SubResource("BoxMesh_planters")
+
+[node name="GrowLight" type="OmniLight3D" parent="BaseCamp/BioDomeGreenhouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+light_color = Color(0.85, 0.3, 0.95, 1)
+light_energy = 2.0
+omni_range = 8.0
+
+[node name="SolarFarm" type="Node3D" parent="BaseCamp"]
+transform = Transform3D(0.939693, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.939693, -18, 0, 6)
+
+[node name="SolarPanel1" type="MeshInstance3D" parent="BaseCamp/SolarFarm"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 1.8, -4)
+mesh = SubResource("BoxMesh_solar_panel")
+
+[node name="Post1" type="MeshInstance3D" parent="BaseCamp/SolarFarm"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -4)
+mesh = SubResource("CylinderMesh_solar_post")
+
+[node name="SolarPanel2" type="MeshInstance3D" parent="BaseCamp/SolarFarm"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 1.8, 0)
+mesh = SubResource("BoxMesh_solar_panel")
+
+[node name="Post2" type="MeshInstance3D" parent="BaseCamp/SolarFarm"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CylinderMesh_solar_post")
+
+[node name="SolarPanel3" type="MeshInstance3D" parent="BaseCamp/SolarFarm"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 1.8, 4)
+mesh = SubResource("BoxMesh_solar_panel")
+
+[node name="Post3" type="MeshInstance3D" parent="BaseCamp/SolarFarm"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 4)
+mesh = SubResource("CylinderMesh_solar_post")
+
+[node name="PowerGenerator" parent="BaseCamp/SolarFarm" instance=ExtResource("6_gen")]
+transform = Transform3D(3.5, 0, 0, 0, 3.5, 0, 0, 0, 3.5, 5, 0, 0)
+
+[node name="LifeSupportStorage" type="Node3D" parent="BaseCamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -8)
+
+[node name="Barrel1" parent="BaseCamp/LifeSupportStorage" instance=ExtResource("9_barrel")]
+transform = Transform3D(3.5, 0, 0, 0, 3.5, 0, 0, 0, 3.5, -2, 0, 0)
+
+[node name="Barrel2" parent="BaseCamp/LifeSupportStorage" instance=ExtResource("9_barrel")]
+transform = Transform3D(3.5, 0, 0, 0, 3.5, 0, 0, 0, 3.5, 2, 0, 0)
+
+[node name="RadiationShieldPylon" parent="BaseCamp" instance=ExtResource("7_shield")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -4, 0, 16)
+
+[node name="ShieldLight" type="OmniLight3D" parent="BaseCamp/RadiationShieldPylon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+light_color = Color(0.2, 0.7, 1, 1)
+light_energy = 2.0
+omni_range = 6.0
+
+[node name="CommRelay" type="Node3D" parent="BaseCamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, -12)
+
+[node name="SatelliteDishModel" parent="BaseCamp/CommRelay" instance=ExtResource("5_dish")]
+transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0)
+
+[node name="LaunchPad" type="Node3D" parent="BaseCamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -32)
+
+[node name="PadPlatform" type="MeshInstance3D" parent="BaseCamp/LaunchPad"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+mesh = SubResource("CylinderMesh_landing_pad")
+
+[node name="RocketBase" parent="BaseCamp/LaunchPad" instance=ExtResource("11_rocket_base")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0.4, 0)
+
+[node name="RocketFuel" parent="BaseCamp/LaunchPad" instance=ExtResource("12_rocket_fuel")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 6.8, 0)
+
+[node name="RocketTop" parent="BaseCamp/LaunchPad" instance=ExtResource("13_rocket_top")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 8.8, 0)
+
+[node name="RoverStation" type="Node3D" parent="BaseCamp"]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, -14, 0, 20)
+
+[node name="RoverModel" parent="BaseCamp/RoverStation" instance=ExtResource("4_rover")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0)
+
+[node name="JezeroIceMine" type="Node3D" parent="BaseCamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 55)
+
+[node name="Crater" parent="BaseCamp/JezeroIceMine" instance=ExtResource("14_crater")]
+transform = Transform3D(30, 0, 0, 0, 30, 0, 0, 0, 30, 0, 0, 0)
+
+[node name="IceCrystals" parent="BaseCamp/JezeroIceMine" instance=ExtResource("15_crystals")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -3, 0.5, 0)
+
+[node name="MiningMachine" parent="BaseCamp/JezeroIceMine" instance=ExtResource("8_miner")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 3, 0, 0)
+
+[node name="POI_IceMine" type="Area3D" parent="BaseCamp/JezeroIceMine"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("2_poi")
+title = "Jezero Subsurface Ice Mine"
+fun_fact = "Pure glacial water ice is preserved beneath Martian soil! The automated harvester mines this ice to supply life support and fuel the return rocket."
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BaseCamp/JezeroIceMine/POI_IceMine"]
+shape = SubResource("SphereShape3D_poi")
+
+[node name="BeaconMesh" type="MeshInstance3D" parent="BaseCamp/JezeroIceMine/POI_IceMine"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+mesh = SubResource("CylinderMesh_beacon_blue")
+
+[node name="BeaconLight" type="OmniLight3D" parent="BaseCamp/JezeroIceMine/POI_IceMine"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 0)
+light_color = Color(0.2, 0.8, 1, 1)
+light_energy = 2.5
+omni_range = 12.0

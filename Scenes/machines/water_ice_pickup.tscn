@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scripts/machines/water_ice_pickup.gd" id="1_ice_script"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_pickup"]
+radius = 1.8
+
+[sub_resource type="StandardMaterial3D" id="Material_ice_crystal"]
+albedo_color = Color(0.72, 0.88, 0.98, 0.9)
+roughness = 0.08
+metallic = 0.05
+specular = 0.95
+emission_enabled = true
+emission = Color(0.4, 0.75, 1, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="PrismMesh" id="PrismMesh_ice"]
+material = SubResource("Material_ice_crystal")
+size = Vector3(0.5, 0.7, 0.4)
+
+[node name="WaterIcePickup" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_ice_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+shape = SubResource("SphereShape3D_pickup")
+
+[node name="IceMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+mesh = SubResource("PrismMesh_ice")
+
+[node name="PromptLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+visible = false
+billboard = 1
+text = "Water Ice
+[E] Collect"
+font_size = 20

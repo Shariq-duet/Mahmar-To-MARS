@@ -1,0 +1,82 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://Scripts/planet/lava_tube_cave.gd" id="1_cave"]
+[ext_resource type="PackedScene" path="res://Assets/Models/rock_crystalsLargeA.glb" id="2_crystal"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_cave_zone"]
+radius = 18.0
+
+[sub_resource type="StandardMaterial3D" id="Material_basalt"]
+albedo_color = Color(0.24, 0.20, 0.18, 1)
+roughness = 0.95
+
+[sub_resource type="TorusMesh" id="TorusMesh_arch"]
+material = SubResource("Material_basalt")
+inner_radius = 5.0
+outer_radius = 8.5
+rings = 16
+ring_segments = 10
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_tunnel"]
+material = SubResource("Material_basalt")
+top_radius = 7.0
+bottom_radius = 7.5
+height = 24.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_dome"]
+material = SubResource("Material_basalt")
+flip_faces = true
+radius = 16.0
+height = 14.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_arch_col"]
+size = Vector3(14, 8, 4)
+
+[sub_resource type="StandardMaterial3D" id="Material_ice_glow"]
+albedo_color = Color(0.4, 0.85, 1.0, 0.8)
+roughness = 0.1
+emission_enabled = true
+emission = Color(0.25, 0.75, 1.0, 1)
+emission_energy_multiplier = 3.0
+
+[node name="LavaTubeCave" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_cave")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
+shape = SubResource("SphereShape3D_cave_zone")
+
+[node name="EntranceArch" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 4.5, 0)
+mesh = SubResource("TorusMesh_arch")
+
+[node name="ArchCollider" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ArchCollider"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.0, 0)
+shape = SubResource("BoxShape3D_arch_col")
+
+[node name="TunnelInterior" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 3.5, -12)
+mesh = SubResource("CylinderMesh_tunnel")
+
+[node name="CavernDome" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.0, -22)
+mesh = SubResource("SphereMesh_dome")
+
+[node name="GlacialIceCrystals" parent="." instance=ExtResource("2_crystal")]
+transform = Transform3D(3.5, 0, 0, 0, 3.5, 0, 0, 0, 3.5, 0, 0.5, -20)
+
+[node name="CrystalLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0, -20)
+light_color = Color(0.2, 0.85, 1, 1)
+light_energy = 3.2
+omni_range = 22.0
+
+[node name="PromptLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.2, 2.5)
+billboard = 1
+text = "🕳️ Pavonis Lava Tube Entrance"
+font_size = 28

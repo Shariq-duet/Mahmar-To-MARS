@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://c8yv2r8p4j7k1"]
+
+[ext_resource type="Script" path="res://Scripts/machines/rover_site.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://models/rover/rover.glb" id="2_rover"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_track"]
+albedo_color = Color(0.36, 0.14, 0.08, 0.85)
+roughness = 0.98
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_track"]
+size = Vector2(0.45, 9.0)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_pickup_zone"]
+radius = 2.2
+
+[sub_resource type="StandardMaterial3D" id="Material_power_core"]
+albedo_color = Color(0.95, 0.7, 0.15, 1)
+metallic = 0.6
+roughness = 0.2
+emission_enabled = true
+emission = Color(0.95, 0.7, 0.15, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_power_core"]
+material = SubResource("Material_power_core")
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.45
+
+[node name="RoverSite" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="RoverModel" parent="." instance=ExtResource("2_rover")]
+transform = Transform3D(1.188, 0.167, 0, -0.167, 1.188, 0, 0, 0, 1.2, 0, -0.32, 0)
+
+[node name="TyreTrackLeft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0.02, -4.5)
+material_override = SubResource("StandardMaterial3D_track")
+mesh = SubResource("PlaneMesh_track")
+
+[node name="TyreTrackRight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0.02, -4.5)
+material_override = SubResource("StandardMaterial3D_track")
+mesh = SubResource("PlaneMesh_track")
+
+[node name="PowerCorePickup" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, -0.2)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PowerCorePickup"]
+shape = SubResource("SphereShape3D_pickup_zone")
+
+[node name="CoreMesh" type="MeshInstance3D" parent="PowerCorePickup"]
+mesh = SubResource("CylinderMesh_power_core")
+
+[node name="PromptLabel" type="Label3D" parent="PowerCorePickup"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+visible = false
+billboard = 1
+text = "Power Unit Core
+[E] Recover"
+font_size = 22

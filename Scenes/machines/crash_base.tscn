@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://df7w3k0m2q5x8"]
+
+[ext_resource type="PackedScene" path="res://models/lander/lander.glb" id="1_lander"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_debris_metal"]
+albedo_color = Color(0.28, 0.29, 0.32, 1)
+metallic = 0.8
+roughness = 0.4
+
+[sub_resource type="BoxMesh" id="BoxMesh_strut"]
+material = SubResource("Mat_debris_metal")
+size = Vector3(0.3, 4, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_panel"]
+material = SubResource("Mat_debris_metal")
+size = Vector3(2.5, 0.1, 1.8)
+
+[node name="CrashBase" type="Node3D"]
+
+[node name="CrashedLander" parent="." instance=ExtResource("1_lander")]
+transform = Transform3D(1.359, 0.634, 0, -0.634, 1.359, 0, 0, 0, 1.5, -0.5, 0.25, 0)
+
+[node name="PrimitiveDebrisGroup" type="Node3D" parent="."]
+
+[node name="DebrisStrut1" type="MeshInstance3D" parent="PrimitiveDebrisGroup"]
+transform = Transform3D(0.866025, -0.5, 0, 0.433013, 0.75, -0.5, 0.25, 0.433013, 0.866025, -2.5, 0.4, -0.8)
+mesh = SubResource("BoxMesh_strut")
+
+[node name="DebrisStrut2" type="MeshInstance3D" parent="PrimitiveDebrisGroup"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -1.2, 0.2, 2.4)
+mesh = SubResource("BoxMesh_strut")
+
+[node name="DebrisPanel" type="MeshInstance3D" parent="PrimitiveDebrisGroup"]
+transform = Transform3D(0.965926, -0.258819, 0, 0.25, 0.933013, -0.258819, 0.0669873, 0.25, 0.965926, 0.5, 0.1, -2.2)
+mesh = SubResource("BoxMesh_panel")
