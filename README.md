@@ -1,8 +1,8 @@
-# Ares Sol: Procedural Mars Survival & Ascent Simulation
+# Mahmar To MARS: Procedural Mars Survival & Ascent Simulation
 
 [![NASA Space Apps Challenge 2026](https://img.shields.io/badge/NASA%20Space%20Apps-Challenge%20%2303-0B3D91?style=for-the-badge&logo=nasa)](https://www.spaceappschallenge.org/)
 [![Engine](https://img.shields.io/badge/Engine-Godot%204.3%2B-478CBF?style=for-the-badge&logo=godotengine&logoColor=white)](https://godotengine.org)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-333333?style=for-the-badge)](https://github.com/Shariq-duet/ares-sol)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-333333?style=for-the-badge)](https://github.com/Shariq-duet/Mahmar-To-MARS)
 [![Tests](https://img.shields.io/badge/Tests-30%2F30%20Passing%20(100%25)-success?style=for-the-badge)](tests/)
 
 > **A high-fidelity 3D Mars survival and orbital ascent experience built in Godot 4, combining authentic spherical planetary physics, real-time NASA space weather telemetry, and engineering-driven life support restoration.**
@@ -11,7 +11,7 @@
 
 ## 🚀 Overview
 
-**Ares Sol** challenges players to survive the unforgiving environmental realities of Mars after a catastrophic atmospheric entry. Stranded on an authentic procedural cube-sphere planet, the astronaut awakens wounded at the crash site. To survive and return to orbit, players must reach the emergency Life Pod, restore damaged closed-loop life support systems, and repair the Mars Ascent Vehicle (MAV).
+**Mahmar To MARS** challenges players to survive the unforgiving environmental realities of Mars after a catastrophic atmospheric entry. Stranded on an authentic procedural cube-sphere planet, the astronaut awakens wounded at the crash site. To survive and return to orbit, players must reach the emergency Life Pod, restore damaged closed-loop life support systems, and repair the Mars Ascent Vehicle (MAV).
 
 Instead of relying on arbitrary game tropes, every survival mechanic in Ares Sol directly models authentic aerospace engineering and real-world planetary science.
 
