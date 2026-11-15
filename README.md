@@ -91,6 +91,16 @@ The project includes an automated test suite verifying all physics, shaders, and
 
 ---
 
+## 🤖 AI Evidence & Usage Disclosure
+
+In compliance with the NASA Space Apps Challenge AI policy, full transcripts of the human-directed AI pair programming and design sessions are archived:
+* **Evidence Directory**: [`ai-evidence/`](ai-evidence/)
+* **Session 1 Transcript**: [`ai-evidence/Chat_01_Architecture_Movement_and_Terrain.md`](ai-evidence/Chat_01_Architecture_Movement_and_Terrain.md)
+* **Session 2 Transcript**: [`ai-evidence/Chat_02_Survival_Cutscenes_and_Polishing.md`](ai-evidence/Chat_02_Survival_Cutscenes_and_Polishing.md)
+* **Raw Cryptographic Logs**: [`ai-evidence/raw/`](ai-evidence/raw/)
+
+---
+
 ## 👥 NASA Space Apps Team
 
 * **Challenge**: NASA Space Apps Challenge 2026 — Challenge #03
