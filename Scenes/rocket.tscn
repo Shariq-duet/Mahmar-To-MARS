@@ -1,6 +1,82 @@
-[gd_scene format=3 uid="uid://df70y6mkgb8qv"]
+[gd_scene load_steps=13 format=3 uid="uid://df70y6mkgb8qv"]
 
 [ext_resource type="PackedScene" path="res://Assets/rocket_ship.glb" id="1_mesh"]
+[ext_resource type="AudioStream" uid="uid://bcrk4d2osxuv1" path="res://audio/engine_loop.ogg" id="2_audio"]
+
+[sub_resource type="StandardMaterial3D" id="Material_glow"]
+albedo_color = Color(1, 0.35, 0.05, 1)
+emission_enabled = true
+emission = Color(1, 0.4, 0.05, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_glow"]
+material = SubResource("Material_glow")
+top_radius = 1.0
+bottom_radius = 1.4
+height = 0.25
+
+[sub_resource type="StandardMaterial3D" id="Material_exhaust"]
+transparency = 1
+blend_mode = 1
+albedo_color = Color(1, 0.7, 0.2, 0.9)
+emission_enabled = true
+emission = Color(1, 0.45, 0.05, 1)
+emission_energy_multiplier = 5.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_exhaust"]
+direction = Vector3(0, -1, 0)
+spread = 15.0
+initial_velocity_min = 20.0
+initial_velocity_max = 35.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.8
+scale_max = 2.4
+
+[sub_resource type="SphereMesh" id="SphereMesh_exhaust"]
+material = SubResource("Material_exhaust")
+radius = 0.5
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Material_plume"]
+transparency = 1
+blend_mode = 1
+albedo_color = Color(1, 0.35, 0.08, 0.45)
+emission_enabled = true
+emission = Color(1, 0.3, 0.05, 1)
+emission_energy_multiplier = 3.5
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_plume"]
+direction = Vector3(0, 1, 0)
+spread = 45.0
+initial_velocity_min = 12.0
+initial_velocity_max = 25.0
+gravity = Vector3(0, 0, 0)
+scale_min = 1.5
+scale_max = 4.2
+
+[sub_resource type="SphereMesh" id="SphereMesh_plume"]
+material = SubResource("Material_plume")
+radius = 0.8
+height = 1.6
+
+[sub_resource type="StandardMaterial3D" id="Material_venting"]
+transparency = 1
+albedo_color = Color(0.35, 0.32, 0.3, 0.6)
+roughness = 0.9
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_venting"]
+direction = Vector3(0, 1, 0)
+spread = 40.0
+initial_velocity_min = 2.0
+initial_velocity_max = 6.0
+gravity = Vector3(0, 0.6, 0)
+scale_min = 0.4
+scale_max = 1.8
+
+[sub_resource type="SphereMesh" id="SphereMesh_venting"]
+material = SubResource("Material_venting")
+radius = 0.4
+height = 0.8
 
 [node name="Rocket" type="Node3D"]
 
@@ -9,3 +85,33 @@ transform = Transform3D(5.5, 0, 0, 0, 5.5, 0, 0, 0, 5.5, -0.60041, -3.03171, 14.
 
 [node name="EngineMarker" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.256, 0)
+
+[node name="HeatShieldGlow" type="MeshInstance3D" parent="EngineMarker"]
+mesh = SubResource("CylinderMesh_glow")
+material_override = SubResource("Material_glow")
+
+[node name="ExhaustParticles" type="GPUParticles3D" parent="EngineMarker"]
+emitting = false
+amount = 80
+lifetime = 0.8
+process_material = SubResource("ParticleProcessMaterial_exhaust")
+draw_pass_1 = SubResource("SphereMesh_exhaust")
+
+[node name="HeatPlume" type="GPUParticles3D" parent="EngineMarker"]
+emitting = false
+amount = 100
+lifetime = 1.2
+process_material = SubResource("ParticleProcessMaterial_plume")
+draw_pass_1 = SubResource("SphereMesh_plume")
+
+[node name="VentingParticles" type="GPUParticles3D" parent="EngineMarker"]
+emitting = false
+amount = 40
+lifetime = 2.5
+process_material = SubResource("ParticleProcessMaterial_venting")
+draw_pass_1 = SubResource("SphereMesh_venting")
+
+[node name="EngineSound" type="AudioStreamPlayer3D" parent="EngineMarker"]
+stream = ExtResource("2_audio")
+unit_size = 30.0
+max_distance = 450.0

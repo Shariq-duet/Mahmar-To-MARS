@@ -55,7 +55,7 @@ world_env = NodePath("../WorldEnvironment")
 [node name="ProceduralMars" parent="." instance=ExtResource("2_planet")]
 
 [node name="PodSpawn" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.95128, 500.3131, -30.95128)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.9295, 499.9644, -30.9295)
 
 [node name="Player" parent="." instance=ExtResource("3_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 520, 0)

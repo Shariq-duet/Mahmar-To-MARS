@@ -23,7 +23,7 @@ signal launch_success
 
 @onready var rocket_root: Node3D = $Rocket if has_node("Rocket") else $RocketMesh
 @onready var prompt_label: Label3D = $PromptLabel
-@onready var thruster_particles: GPUParticles3D = $ThrusterParticles
+@onready var thruster_particles: GPUParticles3D = $Rocket/EngineMarker/ExhaustParticles if has_node("Rocket/EngineMarker/ExhaustParticles") else ($ThrusterParticles if has_node("ThrusterParticles") else null)
 
 var is_player_nearby: bool = false
 var is_holding_repair: bool = false
@@ -210,6 +210,16 @@ func start_ignition() -> void:
 	if thruster_particles:
 		thruster_particles.restart()
 		thruster_particles.emitting = true
+	if has_node("ThrusterParticles"):
+		var tp = get_node("ThrusterParticles") as GPUParticles3D
+		if tp:
+			tp.restart()
+			tp.emitting = true
+	if has_node("Rocket/EngineMarker/ExhaustParticles"):
+		var ep = get_node("Rocket/EngineMarker/ExhaustParticles") as GPUParticles3D
+		if ep:
+			ep.restart()
+			ep.emitting = true
 	if rumble_player:
 		rumble_player.play()
 	print("[MAV ROCKET] Engine ignition engaged: Exhaust plume active, low rumble sound playing.")
@@ -220,6 +230,11 @@ func set_liftoff_progress(progress: float) -> void:
 	if rocket_root:
 		# Ascend along local Y (which points away from planet)
 		rocket_root.position.y = base_rocket_local_pos.y + progress * liftoff_altitude
+		# Keep ground-level ThrusterParticles locked to the nozzle as well
+		if has_node("ThrusterParticles"):
+			var tp = get_node("ThrusterParticles") as GPUParticles3D
+			if tp and tp.get_parent() == self:
+				tp.position.y = 3.256 + progress * liftoff_altitude
 
 func _on_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player") or body.name == "Player":

@@ -30,7 +30,7 @@
 			0.996195,
 			-0.061628
 		],
-		"height_offset": 0.0,
+		"height_offset": -0.35,
 		"name": "home",
 		"scene_path": "res://Scenes/machines/crashed_pod.tscn",
 		"yaw": 0.0
@@ -78,7 +78,7 @@
 			0.996195,
 			-0.061628
 		],
-		"height_offset": 0.0,
+		"height_offset": -0.35,
 		"name": "pod",
 		"scene_path": "res://Scenes/machines/crashed_pod.tscn",
 		"yaw": 0.0

@@ -42,6 +42,11 @@ const MAX_VAL: float = 100.0
 @export_group("Oxygen")
 @export var oxygen: float = 100.0
 @export var o2_drain_inside: float = 0.05            # 0.05 per second inside pod
+@export var base_o2_rate: float:                     # Compatibility getter/setter for pod repair systems
+	get:
+		return o2_drain_inside
+	set(val):
+		o2_drain_inside = val
 @export var o2_outside_mult: float = 1.5            # 1.5x outside pod
 @export var o2_jetpack_mult: float = 3.0            # 3.0x while jetpacking
 @export var o2_scrubber_repair_mult: float = 0.5    # Repaired scrubber: 0.5x drain
@@ -50,6 +55,11 @@ const MAX_VAL: float = 100.0
 @export_group("Power")
 @export var power: float = 100.0
 @export var solar_power_gain: float = 0.0            # Legacy property alias
+@export var base_power_drain: float:                 # Compatibility getter/setter
+	get:
+		return power_consumption
+	set(val):
+		power_consumption = val
 @export var power_peak_solar: float = 2.0           # Peak 2.0/s at noon, 0 at night
 @export var power_consumption: float = 0.8          # Consumption is 0.8/s
 @export var power_repaired_mult: float = 1.5        # Repaired power unit adds 50% (+0.5 = 1.5x)

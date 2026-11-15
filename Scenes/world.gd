@@ -32,7 +32,7 @@ const EventManagerScript = preload("res://Scripts/events/mission_event_manager.g
 		if Engine.is_editor_hint():
 			_update_editor_placement()
 
-@export var pod_position: Vector3 = Vector3(-30.95128, 500.3131, -30.95128):
+@export var pod_position: Vector3 = Vector3(-30.9295, 499.9644, -30.9295):
 	set(val):
 		pod_position = val
 		if Engine.is_editor_hint() and has_node("PodSpawn"):
@@ -92,6 +92,7 @@ var current_objective_pos: Variant = null
 # Point-to-Point Exploration Tracker (Outer Wilds style)
 var tracked_pois: Array[Dictionary] = []
 var signal_scan_timer: float = 0.0
+var clean_recording_mode: bool = false
 
 # Historical NASA mission data for crater rim discovery
 const HISTORIC_MISSIONS = [
@@ -228,13 +229,15 @@ func _process_editor_tool() -> void:
 		_last_marker_pos = marker.position
 		_last_marker_rot_y = marker.rotation.y
 		
-		# Auto-snap altitude to Mars terrain surface so it never floats or sinks
+		# Auto-snap altitude to Mars terrain surface with 0.35m grounding offset so it never floats
 		var p = get_node_or_null("ProceduralMars")
 		if p and p.has_method("get_surface_point") and marker.position.length_squared() > 100.0:
-			var surf = p.get_surface_point(marker.global_position.normalized())
-			var delta_h = abs(marker.global_position.length() - surf.length())
+			var norm = marker.global_position.normalized()
+			var surf = p.get_surface_point(norm)
+			var target_pos = surf - norm * 0.35
+			var delta_h = abs(marker.global_position.length() - target_pos.length())
 			if delta_h > 0.05:
-				marker.global_position = surf
+				marker.global_position = target_pos
 				_last_marker_pos = marker.position
 		
 		pod_position = marker.position
@@ -632,7 +635,13 @@ func _align_to_surface(node: Node3D, pos: Vector3, normal: Vector3, up_offset: f
 	node.global_transform = Transform3D(Basis(right, up, -fwd), pos + up * up_offset)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and (event.physical_keycode == KEY_F or event.keycode == KEY_F):
+	if not (event is InputEventKey and event.pressed and not event.echo):
+		return
+	
+	var key = event.physical_keycode if event.physical_keycode != KEY_NONE else event.keycode
+	
+	# Debug key F: Time scale fast-forward
+	if key == KEY_F:
 		if Engine.time_scale > 1.5:
 			Engine.time_scale = 1.0
 			print("[DEBUG] Time scale reset to 1.0x")
@@ -643,6 +652,132 @@ func _unhandled_input(event: InputEvent) -> void:
 			print("[DEBUG] Time scale set to 10.0x fast-forward")
 			if hud and hud.has_method("show_message"):
 				hud.show_message("⏩ Fast-Forward: 10.0x", 1.5)
+		return
+
+	# Debug keys 1-4 and F12 only run when debug_placement is true
+	var reg = get_node_or_null("/root/PlacementRegistry")
+	var is_debug = reg.debug_placement if (reg and "debug_placement" in reg) else true
+	if not is_debug:
+		return
+	
+	# F12: Clean recording mode (Hide debug HUD and gizmos)
+	if key == KEY_F12:
+		_toggle_clean_recording_mode()
+		get_viewport().set_input_as_handled()
+		return
+	
+	# 1: Teleport to Pod Entrance
+	if key == KEY_1:
+		var target = Vector3.ZERO
+		if crashed_pod_node:
+			var door = crashed_pod_node.find_child("Line0022", true, false)
+			if door:
+				var p_up = (door.global_position - planet.global_position).normalized()
+				var p_fwd = (door.global_position - crashed_pod_node.global_position)
+				p_fwd = (p_fwd - p_up * p_fwd.dot(p_up)).normalized()
+				target = door.global_position + p_fwd * 1.5
+			else:
+				target = crashed_pod_node.global_position
+		elif reg and reg.has_method("get_position") and reg.get_position("pod") != null:
+			target = reg.get_position("pod")
+		else:
+			target = pod_position
+		_teleport_player(target, "Pod Entrance")
+		get_viewport().set_input_as_handled()
+	# 2: Teleport to Cargo Site
+	elif key == KEY_2:
+		var target = Vector3.ZERO
+		if cargo_site_node:
+			target = cargo_site_node.global_position
+		elif reg and reg.has_method("get_position") and reg.get_position("cargo_site") != null:
+			target = reg.get_position("cargo_site")
+		_teleport_player(target, "Cargo Site")
+		get_viewport().set_input_as_handled()
+	# 3: Teleport to Rover Site
+	elif key == KEY_3:
+		var target = Vector3.ZERO
+		if rover_site_node:
+			target = rover_site_node.global_position
+		elif reg and reg.has_method("get_position") and reg.get_position("rover_site") != null:
+			target = reg.get_position("rover_site")
+		_teleport_player(target, "Rover Site")
+		get_viewport().set_input_as_handled()
+	# 4: Teleport to Water Deposit Base
+	elif key == KEY_4:
+		var target = Vector3.ZERO
+		if planet and "water_ice_dir" in planet:
+			target = planet.get_surface_point(planet.water_ice_dir)
+		elif reg and reg.has_method("get_position") and reg.get_position("water_deposit") != null:
+			target = reg.get_position("water_deposit")
+		_teleport_player(target, "Water Deposit Base")
+		get_viewport().set_input_as_handled()
+
+func _teleport_player(target_pos: Vector3, location_name: String) -> void:
+	if not player or not planet:
+		return
+	
+	# Unlock player from intro cutscene if active so they can immediately move and record
+	if "is_intro_active" in player and player.is_intro_active:
+		player.is_intro_active = false
+		player.input_locked = false
+		if player.has_method("_finish_intro"):
+			player._finish_intro()
+		elif "letterbox_ui" in player and player.letterbox_ui:
+			player.letterbox_ui.slide_out(0.2)
+	
+	var center = planet.global_position
+	var up = (target_pos - center).normalized()
+	
+	# Place player on ground surface + slight elevation clearance
+	var surf_pt = planet.get_surface_point(up) if planet.has_method("get_surface_point") else target_pos
+	var final_pos = surf_pt + up * 0.7
+	
+	var fwd = -player.global_transform.basis.z
+	fwd = (fwd - up * fwd.dot(up)).normalized()
+	if fwd.length_squared() < 0.01:
+		fwd = Vector3.FORWARD
+		fwd = (fwd - up * fwd.dot(up)).normalized()
+	var right = up.cross(fwd).normalized()
+	fwd = right.cross(up).normalized()
+	
+	player.global_transform = Transform3D(Basis(right, up, -fwd), final_pos)
+	player.velocity = Vector3.ZERO
+	
+	print("[TELEPORT] Teleported player to %s at position: %s" % [location_name, player.global_position])
+	if hud and hud.has_method("show_message"):
+		hud.show_message("Teleported to: %s" % location_name, 2.0)
+
+func _toggle_clean_recording_mode() -> void:
+	clean_recording_mode = not clean_recording_mode
+	
+	if clean_recording_mode:
+		if hud:
+			hud.visible = false
+		if player and "letterbox_ui" in player and player.letterbox_ui:
+			player.letterbox_ui.set_hud_visible(false)
+	else:
+		if player and "letterbox_ui" in player and player.letterbox_ui:
+			player.letterbox_ui.hide_hud = false
+			player.letterbox_ui.is_active = false
+		if hud:
+			hud.visible = true
+	
+	# Hide / show all beacons
+	for poi in registry_pois:
+		var b_node = poi.get("beacon_node") as Node3D
+		if b_node and is_instance_valid(b_node):
+			b_node.visible = not clean_recording_mode
+	
+	# Hide / show debug marker spheres from PlacementRegistry
+	var reg = get_node_or_null("/root/PlacementRegistry")
+	if reg:
+		for child in reg.get_children():
+			if child.name.begins_with("DebugMarker_"):
+				child.visible = not clean_recording_mode
+	
+	print("[RECORDING] F12 clean mode: %s (HUD and gizmos %s)" % ["ENABLED" if clean_recording_mode else "DISABLED", "HIDDEN" if clean_recording_mode else "VISIBLE"])
+
+
 
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint():
@@ -746,7 +881,7 @@ func _update_beacons_and_guidance() -> void:
 		var b_node = poi.get("beacon_node") as Node3D
 		if b_node and is_instance_valid(b_node):
 			var in_range = (dist >= 15.0 and dist <= 150.0)
-			b_node.visible = in_range
+			b_node.visible = in_range and (not clean_recording_mode)
 			if in_range:
 				var lbl = b_node.find_child("TopLabel", true, false) as Label3D
 				if lbl:

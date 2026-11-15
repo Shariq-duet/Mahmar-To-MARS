@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stranded: Mars Outpost — Presentation</title>
+  <style>
+    :root {
+      --bg-dark: #07090E;
+      --card-bg: rgba(14, 20, 30, 0.85);
+      --card-border: rgba(63, 208, 240, 0.25);
+      --cyan: #3FD0F0;
+      --cyan-glow: rgba(63, 208, 240, 0.4);
+      --amber: #F0A830;
+      --amber-glow: rgba(240, 168, 48, 0.4);
+      --text-light: #F0F4F8;
+      --text-muted: #8E9CAE;
+      --text-dim: #546478;
+      --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 85% 15%, rgba(63, 208, 240, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 15% 85%, rgba(240, 168, 48, 0.06) 0%, transparent 40%);
+      color: var(--text-light);
+      font-family: var(--font-main);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Top Bar Header */
+    #top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      z-index: 100;
+      border-bottom: 1px solid rgba(63, 208, 240, 0.12);
+      background: rgba(7, 9, 14, 0.9);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-title {
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      background: rgba(63, 208, 240, 0.15);
+      border: 1px solid var(--cyan);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      color: var(--cyan);
+    }
+
+    /* Timer Widget in Top Right */
+    #timer-widget {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    #timer-display {
+      background: rgba(14, 20, 30, 0.9);
+      padding: 4px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(63, 208, 240, 0.3);
+      color: var(--cyan);
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+    }
+
+    #timer-display.amber-warning {
+      color: var(--amber);
+      border-color: var(--amber);
+      box-shadow: 0 0 12px var(--amber-glow);
+      animation: pulse-amber 1.5s infinite;
+    }
+
+    @keyframes pulse-amber {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.65; }
+    }
+
+    .btn-small {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-light);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: var(--font-main);
+      transition: all 0.2s;
+    }
+
+    .btn-small:hover {
+      background: rgba(63, 208, 240, 0.2);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* 16:9 Slide Presentation Frame */
+    #stage-container {
+      width: 94vw;
+      max-width: 1360px;
+      aspect-ratio: 16 / 9;
+      position: relative;
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      padding: 48px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px) scale(0.98);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Slide Typography */
+    .slide-tag {
+      font-size: 13px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--cyan);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slide-tag::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    .slide-title {
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--text-light);
+      line-height: 1.15;
+      margin-bottom: 24px;
+      letter-spacing: -0.5px;
+    }
+
+    .slide-title .highlight {
+      color: var(--cyan);
+    }
+
+    .slide-title .amber {
+      color: var(--amber);
+    }
+
+    .slide-content {
+      font-size: 19px;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    /* Editable text indicators */
+    [contenteditable="true"] {
+      user-select: text;
+      cursor: text;
+      outline: none;
+      transition: background 0.2s;
+    }
+    [contenteditable="true"]:hover {
+      background: rgba(63, 208, 240, 0.05);
+      border-radius: 4px;
+    }
+    [contenteditable="true"]:focus {
+      background: rgba(63, 208, 240, 0.1);
+      box-shadow: 0 0 0 1px var(--cyan);
+      border-radius: 4px;
+    }
+
+    /* SLIDE 1: Title */
+    .hero-title {
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--text-light);
+      margin-bottom: 16px;
+      line-height: 1.05;
+    }
+    .hero-title span {
+      color: var(--cyan);
+      text-shadow: 0 0 30px var(--cyan-glow);
+    }
+    .hero-challenge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(240, 168, 48, 0.12);
+      border: 1px solid var(--amber);
+      color: var(--amber);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 6px 16px;
+      border-radius: 30px;
+      margin-bottom: 36px;
+      text-transform: uppercase;
+    }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: 780px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .meta-item .meta-label {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .meta-item .meta-val {
+      font-size: 17px;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    /* SLIDE 2: The Problem Cards */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 20px;
+    }
+    .fact-card {
+      background: rgba(10, 14, 22, 0.7);
+      border: 1px solid rgba(63, 208, 240, 0.18);
+      border-radius: 8px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      transition: border-color 0.2s;
+    }
+    .fact-card:hover {
+      border-color: var(--cyan);
+    }
+    .fact-num {
+      font-size: 38px;
+      font-weight: 900;
+      color: var(--amber);
+      line-height: 1;
+      margin-bottom: 12px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+    }
+    .fact-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+    .fact-desc {
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--text-muted);
+    }
+
+    /* SLIDE 3: The Story Roadmap */
+    .story-roadmap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 28px;
+    }
+    .roadmap-step {
+      background: rgba(10, 14, 22, 0.7);
+      border-top: 3px solid var(--cyan);
+      border-radius: 8px;
+      padding: 24px 20px;
+    }
+    .roadmap-step.active-step {
+      border-top-color: var(--amber);
+      background: rgba(240, 168, 48, 0.05);
+    }
+    .step-badge {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .roadmap-step.active-step .step-badge {
+      color: var(--amber);
+    }
+    .step-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+    .step-desc {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    /* SLIDE 4: Game Video Placeholder */
+    .video-frame {
+      width: 100%;
+      height: 380px;
+      background: rgba(4, 6, 10, 0.95);
+      border: 2px dashed rgba(63, 208, 240, 0.4);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .video-frame:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 25px rgba(63, 208, 240, 0.15);
+    }
+    .play-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: rgba(63, 208, 240, 0.15);
+      border: 2px solid var(--cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      transition: transform 0.2s;
+    }
+    .video-frame:hover .play-icon {
+      transform: scale(1.1);
+      background: var(--cyan);
+    }
+    .video-frame:hover .play-icon svg {
+      fill: #080B10;
+    }
+    .video-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-light);
+      letter-spacing: 1px;
+    }
+    .video-sub {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-top: 6px;
+    }
+    .video-caption {
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--amber);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* SLIDE 5: Survival Icons */
+    .survival-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .survival-card {
+      background: rgba(10, 14, 22, 0.7);
+      border: 1px solid rgba(63, 208, 240, 0.18);
+      border-radius: 10px;
+      padding: 28px 22px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .survival-card:hover {
+      border-color: var(--cyan);
+    }
+    .icon-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .icon-cyan {
+      background: rgba(63, 208, 240, 0.12);
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+    }
+    .icon-amber {
+      background: rgba(240, 168, 48, 0.12);
+      border: 1px solid var(--amber);
+      color: var(--amber);
+    }
+    .survival-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-light);
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+    .survival-decision {
+      font-size: 13.5px;
+      line-height: 1.45;
+      color: var(--text-muted);
+    }
+
+    /* SLIDE 6: Status and Next Columns */
+    .status-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 20px;
+    }
+    .status-col {
+      background: rgba(10, 14, 22, 0.7);
+      border: 1px solid rgba(63, 208, 240, 0.18);
+      border-radius: 10px;
+      padding: 30px 28px;
+    }
+    .status-col.built {
+      border-left: 4px solid var(--cyan);
+    }
+    .status-col.next {
+      border-left: 4px solid var(--amber);
+    }
+    .status-header {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .status-col.built .status-header { color: var(--cyan); }
+    .status-col.next .status-header { color: var(--amber); }
+
+    .status-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .status-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 15px;
+      color: var(--text-light);
+      line-height: 1.4;
+    }
+    .status-check {
+      font-weight: bold;
+      color: var(--cyan);
+    }
+    .status-next-bullet {
+      color: var(--amber);
+      font-weight: bold;
+    }
+
+    /* SLIDE 7: Close */
+    .close-container {
+      text-align: center;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .target-badge {
+      display: inline-block;
+      font-size: 13px;
+      letter-spacing: 2px;
+      font-weight: 800;
+      color: var(--amber);
+      background: rgba(240, 168, 48, 0.12);
+      border: 1px solid var(--amber);
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+    .target-statement {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-light);
+      line-height: 1.35;
+      margin-bottom: 36px;
+    }
+    .target-statement span {
+      color: var(--cyan);
+    }
+    .questions-box {
+      background: rgba(63, 208, 240, 0.08);
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(63, 208, 240, 0.1);
+    }
+    .questions-prompt {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--text-light);
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .questions-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Bottom Controls */
+    #bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      z-index: 100;
+      border-top: 1px solid rgba(63, 208, 240, 0.12);
+      background: rgba(7, 9, 14, 0.95);
+      backdrop-filter: blur(10px);
+    }
+
+    .slide-nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .nav-btn {
+      background: rgba(63, 208, 240, 0.1);
+      border: 1px solid rgba(63, 208, 240, 0.3);
+      color: var(--cyan);
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover {
+      background: var(--cyan);
+      color: var(--bg-dark);
+      box-shadow: 0 0 10px var(--cyan);
+    }
+
+    .slide-indicator {
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 13px;
+      color: var(--text-light);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .shortcuts-hint {
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .key-badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--text-light);
+      font-family: ui-monospace, monospace;
+      font-size: 10px;
+    }
+
+    /* Speaker Notes Panel (Toggled with N) */
+    #notes-panel {
+      position: fixed;
+      bottom: 54px;
+      left: 0;
+      right: 0;
+      background: rgba(10, 14, 22, 0.98);
+      border-top: 2px solid var(--amber);
+      padding: 20px 32px;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.7);
+      transform: translateY(105%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 90;
+      backdrop-filter: blur(16px);
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    #notes-panel.open {
+      transform: translateY(0%);
+    }
+
+    .notes-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .notes-title {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--amber);
+    }
+
+    .notes-content {
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header id="top-bar">
+    <div class="brand-title">
+      <span>Stranded: Mars Outpost</span>
+      <span class="brand-badge">Challenge #03</span>
+    </div>
+
+    <!-- 7-Minute Timer (Warning at 6:00) -->
+    <div id="timer-widget">
+      <span style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px;">Session Timer</span>
+      <div id="timer-display">00:00</div>
+      <button class="btn-small" id="btn-timer-toggle" title="Press 'S' to Start/Pause">Start (S)</button>
+      <button class="btn-small" id="btn-timer-reset" title="Press 'R' to Reset">Reset (R)</button>
+    </div>
+  </header>
+
+  <!-- Presentation Stage (16:9 Frame) -->
+  <main id="stage-container">
+
+    <!-- SLIDE 1: Title -->
+    <section class="slide active" id="slide-1" data-slide="1">
+      <div class="slide-tag">NASA Space Apps Challenge 2026</div>
+      <h1 class="hero-title" contenteditable="true">Stranded: <span>Mars Outpost</span></h1>
+      <div class="hero-challenge" contenteditable="true">NASA Space Apps Challenge #03</div>
+
+      <div class="hero-meta">
+        <div class="meta-item">
+          <div class="meta-label">Team Name</div>
+          <div class="meta-val" contenteditable="true">[Your Team Name]</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Crew / Team Members</div>
+          <div class="meta-val" contenteditable="true">[Member 1, Member 2, Member 3, Member 4]</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: The Problem -->
+    <section class="slide" id="slide-2" data-slide="2">
+      <div class="slide-tag">The Operating Environment</div>
+      <h2 class="slide-title" contenteditable="true">Mars Is Hostile to Human Life</h2>
+      <p class="slide-content" style="max-width: 900px;" contenteditable="true">
+        Every second on the surface is an engineering battle against physics and unshielded cosmic conditions.
+      </p>
+
+      <div class="grid-4">
+        <div class="fact-card">
+          <div class="fact-num">&lt; 1%</div>
+          <div class="fact-title" contenteditable="true">Thin Atmosphere</div>
+          <div class="fact-desc" contenteditable="true">Near-vacuum surface pressure consisting of unbreathable CO₂. Total suit dependency.</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-num">38%</div>
+          <div class="fact-title" contenteditable="true">Earth Gravity</div>
+          <div class="fact-desc" contenteditable="true">Lower mass alters locomotion, jumping inertia, cargo transport, and impact mechanics.</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-num">24.6 h</div>
+          <div class="fact-title" contenteditable="true">Sol Day Cycle</div>
+          <div class="fact-desc" contenteditable="true">Sub-zero nightfall cuts solar yield completely, forcing strict nocturnal energy rationing.</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-num">CME</div>
+          <div class="fact-title" contenteditable="true">Dust & Radiation</div>
+          <div class="fact-desc" contenteditable="true">Coronal mass ejections and blinding abrasive dust storms threaten unshielded crew on EVA.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: The Story -->
+    <section class="slide" id="slide-3" data-slide="3">
+      <div class="slide-tag">Mission Narrative & Objectives</div>
+      <h2 class="slide-title" contenteditable="true">We Landed Roughly, For Reasons Still Unknown.</h2>
+      <p class="slide-content" style="max-width: 860px;" contenteditable="true">
+        The mission protocol is clear: establish an emergency foothold, restore vital systems, and coordinate an evacuation window with orbit.
+      </p>
+
+      <div class="story-roadmap">
+        <div class="roadmap-step">
+          <div class="step-badge">Phase 1</div>
+          <h3 class="step-title" contenteditable="true">Stabilise the Crew</h3>
+          <p class="step-desc" contenteditable="true">Reach the emergency Life Pod, treat physical trauma, and repair the damaged oxygen scrubber using salvaged filtration cores.</p>
+        </div>
+        <div class="roadmap-step active-step">
+          <div class="step-badge">Phase 2</div>
+          <h3 class="step-title" contenteditable="true">Build a Transmitter</h3>
+          <p class="step-desc" contenteditable="true">Scavenge high-gain antennas and power supplies across crater rims and derelict rovers to broadcast a distress signal.</p>
+        </div>
+        <div class="roadmap-step">
+          <div class="step-badge">Phase 3</div>
+          <h3 class="step-title" contenteditable="true">Call the Return Vehicle</h3>
+          <p class="step-desc" contenteditable="true">Guide the Earth Return Vehicle to your exact planetary coordinates and initiate the automated ignition countdown.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: The Game (Video Clip Placeholder) -->
+    <section class="slide" id="slide-4" data-slide="4">
+      <div class="slide-tag">Gameplay Demonstration</div>
+      
+      <div class="video-frame" id="video-placeholder">
+        <div class="play-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#3FD0F0">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+        <div class="video-title" contenteditable="true">Video: 60-90 second clip</div>
+        <div class="video-sub" contenteditable="true">[ Click or press space during rehearsal to review footage ]</div>
+      </div>
+
+      <div class="video-caption" contenteditable="true">
+        In-Engine Capture: Atmospheric entry, manual EVA navigation across crater rims, and habitat life-support restoration.
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Survival Decisions -->
+    <section class="slide" id="slide-5" data-slide="5">
+      <div class="slide-tag">Survival Mechanics</div>
+      <h2 class="slide-title" contenteditable="true">Every Resource Shapes a Player Decision</h2>
+
+      <div class="survival-grid">
+        <!-- Oxygen -->
+        <div class="survival-card">
+          <div class="icon-circle icon-cyan">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 3v18M18 3v18M6 12h12M9 3h6M9 21h6"/>
+            </svg>
+          </div>
+          <div class="survival-name" contenteditable="true">Oxygen</div>
+          <div class="survival-decision" contenteditable="true">
+            Drains faster outside and spikes during jetpack bursts, forcing you to calculate every expedition's turning point before leaving shelter.
+          </div>
+        </div>
+
+        <!-- Power -->
+        <div class="survival-card">
+          <div class="icon-circle icon-amber">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <div class="survival-name" contenteditable="true">Power</div>
+          <div class="survival-decision" contenteditable="true">
+            Follows real-time solar elevation angles, compelling players to stockpile energy during peak noon or face life-support brownouts at night.
+          </div>
+        </div>
+
+        <!-- Water -->
+        <div class="survival-card">
+          <div class="icon-circle icon-cyan">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+            </svg>
+          </div>
+          <div class="survival-name" contenteditable="true">Water</div>
+          <div class="survival-decision" contenteditable="true">
+            Depletes steadily with metabolic activity, requiring risky treks into glacial mountain basins to extract cryogenic ice samples.
+          </div>
+        </div>
+
+        <!-- Food -->
+        <div class="survival-card">
+          <div class="icon-circle icon-amber">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="16" rx="3"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <div class="survival-name" contenteditable="true">Food</div>
+          <div class="survival-decision" contenteditable="true">
+            Caloric drain sets an unyielding operational deadline on Sol progression, penalising wasted hours and uncalculated detours.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Status and Next -->
+    <section class="slide" id="slide-6" data-slide="6">
+      <div class="slide-tag">Project Milestones & Vision</div>
+      <h2 class="slide-title" contenteditable="true">Current Status & The Roadmap Ahead</h2>
+
+      <div class="status-columns">
+        <!-- Column 1: Built -->
+        <div class="status-col built">
+          <div class="status-header">
+            <span>Built (Current Playable State)</span>
+            <span>Alpha</span>
+          </div>
+          <ul class="status-list">
+            <li class="status-item">
+              <span class="status-check">✓</span>
+              <span contenteditable="true"><strong>Atmospheric Crash:</strong> Cinematic entry cutscene & wreckage site.</span>
+            </li>
+            <li class="status-item">
+              <span class="status-check">✓</span>
+              <span contenteditable="true"><strong>Walkable Life Pod:</strong> Interior environment with aligned floor and interactive airlock.</span>
+            </li>
+            <li class="status-item">
+              <span class="status-check">✓</span>
+              <span contenteditable="true"><strong>First Repair Loop:</strong> Scrubber salvage, hold-E interaction, and power drain tuning.</span>
+            </li>
+            <li class="status-item">
+              <span class="status-check">✓</span>
+              <span contenteditable="true"><strong>Procedural Martian World:</strong> Cube-sphere geometry, impact craters, and geological fissures.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Column 2: Next -->
+        <div class="status-col next">
+          <div class="status-header">
+            <span>Next (Roadmap to Full Release)</span>
+            <span>Beta / Gold</span>
+          </div>
+          <ul class="status-list">
+            <li class="status-item">
+              <span class="status-next-bullet">→</span>
+              <span contenteditable="true"><strong>Survival Systems Expansion:</strong> Dynamic dust storms, CME solar flares, and suit integrity.</span>
+            </li>
+            <li class="status-item">
+              <span class="status-next-bullet">→</span>
+              <span contenteditable="true"><strong>Long-Range Transmitter:</strong> Multi-part beacon assembly across remote crater rims.</span>
+            </li>
+            <li class="status-item">
+              <span class="status-next-bullet">→</span>
+              <span contenteditable="true"><strong>Return Vehicle Repair:</strong> Pre-flight ignition sequence and orbital ascent launch.</span>
+            </li>
+            <li class="status-item">
+              <span class="status-next-bullet">→</span>
+              <span contenteditable="true"><strong>Co-Op Expeditions:</strong> Multiplayer EVA rover exploration and modular base extensions.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Close -->
+    <section class="slide" id="slide-7" data-slide="7">
+      <div class="close-container">
+        <div class="target-badge">Audience & Accessibility</div>
+        <h2 class="target-statement" contenteditable="true">
+          Built for players aged <span>7 to 12</span>, with authentic scientific depth that challenges older players and educators.
+        </h2>
+
+        <div class="questions-box">
+          <div class="questions-prompt" contenteditable="true">Questions & Discussion</div>
+          <div class="questions-sub" contenteditable="true">Thank you for your time. We welcome the judges' feedback and questions!</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Speaker Notes Drawer (Toggled with N) -->
+  <aside id="notes-panel" aria-live="polite">
+    <div class="notes-header">
+      <span class="notes-title" id="notes-slide-indicator">Speaker Script — Slide 1 of 7</span>
+      <button class="btn-small" id="btn-notes-close">Close (N)</button>
+    </div>
+    <div class="notes-content" id="notes-body">
+      Welcome judges. Today we are presenting "Stranded: Mars Outpost", built for NASA Space Apps Challenge #03. We are a team from Karachi, and our goal is to bring the genuine engineering realities of surviving on Mars into an accessible, immersive experience.
+    </div>
+  </aside>
+
+  <!-- Bottom Navigation Bar -->
+  <footer id="bottom-bar">
+    <div class="slide-nav-controls">
+      <button class="nav-btn" id="btn-prev" title="Previous Slide (Left Arrow)">◀</button>
+      <span class="slide-indicator" id="slide-num-display">1 / 7</span>
+      <button class="nav-btn" id="btn-next" title="Next Slide (Right Arrow or Space)">▶</button>
+      <button class="btn-small" id="btn-notes-toggle" style="margin-left: 10px;">Notes (N)</button>
+    </div>
+
+    <div class="shortcuts-hint">
+      <span><span class="key-badge">←</span> <span class="key-badge">→</span> / <span class="key-badge">Space</span> Navigate</span>
+      <span><span class="key-badge">S</span> Timer</span>
+      <span><span class="key-badge">R</span> Reset</span>
+      <span><span class="key-badge">N</span> Notes</span>
+    </div>
+  </footer>
+
+  <script>
+    // --- Slide State & Speaker Notes ---
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let currentSlide = 1;
+
+    const speakerNotes = {
+      1: "Welcome judges. Today we are presenting 'Stranded: Mars Outpost', built for NASA Space Apps Challenge #03. We are representing the Karachi local event. Our mission was to take real planetary science and translate it into a compelling survival prototype.",
+      2: "Before jumping into code, we looked at the real constraints of Mars. Mars has less than 1% of Earth's atmosphere, 38% gravity, a 24.6-hour Sol cycle, and extreme radiation hazards. In our game, these are not just background facts—they are the core rules that govern every action.",
+      3: "Here is the player's journey: You have survived a rough landing on Sol 1. Your three mission phases are simple yet unforgiving: first, stabilise the crew in the emergency pod; second, build a long-range transmitter; and third, call down the Earth Return Vehicle to get home.",
+      4: "Here is a capture of our working prototype in Godot 4. Notice the transition from the atmospheric entry cutscene straight into gameplay: the player wakes up on the regolith, with authentic gravity and an Outer Wilds-style minimal HUD.",
+      5: "Every survival system changes a concrete decision: Oxygen limits how far you can sprint or jetpack. Power follows the real sun angle, so you cannot delay tasks past sunset. Water forces you into dangerous mountain terrain to find ice. And food creates an overall deadline.",
+      6: "Where we are right now: In 48 hours, we built the entire foundation—the crash site, the walkable life pod, the first salvaged repair loop, and a full procedural cube-sphere planet. Our roadmap next expands weather storms, transmitter assembly, and the final rocket launch.",
+      7: "We designed this game for players aged 7 to 12 to inspire early interest in aerospace and planetary science, while maintaining the physics depth that older gamers and space enthusiasts love. Thank you, and we look forward to your questions!"
+    };
+
+    function showSlide(num) {
+      if (num < 1) num = 1;
+      if (num > totalSlides) num = totalSlides;
+      currentSlide = num;
+
+      slides.forEach((s, idx) => {
+        if (idx + 1 === currentSlide) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
+      });
+
+      document.getElementById('slide-num-display').textContent = `${currentSlide} / ${totalSlides}`;
+      document.getElementById('notes-slide-indicator').textContent = `Speaker Script — Slide ${currentSlide} of ${totalSlides}`;
+      document.getElementById('notes-body').textContent = speakerNotes[currentSlide] || "No speaker notes for this slide.";
+    }
+
+    // --- Keyboard Navigation ---
+    window.addEventListener('keydown', (e) => {
+      // If user is editing text inside contenteditable, let arrow keys edit text normally
+      if (document.activeElement && document.activeElement.isContentEditable) {
+        if (e.key === 'Escape') {
+          document.activeElement.blur();
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        showSlide(currentSlide + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'Backspace' || e.key === 'PageUp' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        showSlide(currentSlide - 1);
+      } else if (e.key === 's' || e.key === 'S') {
+        e.preventDefault();
+        toggleTimer();
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        resetTimer();
+      } else if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        toggleNotes();
+      }
+    });
+
+    document.getElementById('btn-prev').addEventListener('click', () => showSlide(currentSlide - 1));
+    document.getElementById('btn-next').addEventListener('click', () => showSlide(currentSlide + 1));
+
+    // --- 7-Minute Timer (Amber Warning at 6:00 = 360s) ---
+    let timerSeconds = 0;
+    let timerRunning = false;
+    let timerInterval = null;
+    const timerDisplay = document.getElementById('timer-display');
+    const timerToggleBtn = document.getElementById('btn-timer-toggle');
+
+    function updateTimerUI() {
+      const mins = Math.floor(timerSeconds / 60);
+      const secs = timerSeconds % 60;
+      timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+      // Warning at 6:00 (360 seconds)
+      if (timerSeconds >= 360) {
+        timerDisplay.classList.add('amber-warning');
+      } else {
+        timerDisplay.classList.remove('amber-warning');
+      }
+    }
+
+    function toggleTimer() {
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timerToggleBtn.textContent = 'Resume (S)';
+      } else {
+        timerRunning = true;
+        timerToggleBtn.textContent = 'Pause (S)';
+        timerInterval = setInterval(() => {
+          timerSeconds++;
+          updateTimerUI();
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      timerSeconds = 0;
+      updateTimerUI();
+      timerToggleBtn.textContent = 'Start (S)';
+    }
+
+    document.getElementById('btn-timer-toggle').addEventListener('click', toggleTimer);
+    document.getElementById('btn-timer-reset').addEventListener('click', resetTimer);
+
+    // --- Speaker Notes Drawer ---
+    const notesPanel = document.getElementById('notes-panel');
+    function toggleNotes() {
+      notesPanel.classList.toggle('open');
+    }
+    document.getElementById('btn-notes-toggle').addEventListener('click', toggleNotes);
+    document.getElementById('btn-notes-close').addEventListener('click', toggleNotes);
+
+    // Initial slide render
+    showSlide(1);
+  </script>
+</body>
+</html>

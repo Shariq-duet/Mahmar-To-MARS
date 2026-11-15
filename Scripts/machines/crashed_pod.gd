@@ -544,10 +544,18 @@ func _complete_scrubber_repair() -> void:
 	
 	var s = _get_survival()
 	if s:
-		s.power = max(0.0, s.power - repair_power_cost)
-		var old_drain = s.base_o2_rate
-		s.base_o2_rate *= oxygen_repair_factor
-		print("[OXYGEN SCRUBBER] Drain rate before: %.3f/s, after: %.3f/s" % [old_drain, s.base_o2_rate])
+		if "is_scrubber_repaired" in s:
+			s.is_scrubber_repaired = true
+		if "power" in s:
+			s.power = max(0.0, s.power - repair_power_cost)
+		if "base_o2_rate" in s:
+			var old_drain = s.base_o2_rate
+			s.base_o2_rate *= oxygen_repair_factor
+			print("[OXYGEN SCRUBBER] Drain rate before: %.3f/s, after: %.3f/s" % [old_drain, s.base_o2_rate])
+		elif "o2_drain_inside" in s:
+			var old_drain = s.o2_drain_inside
+			s.o2_drain_inside *= oxygen_repair_factor
+			print("[OXYGEN SCRUBBER] Drain rate before: %.3f/s, after: %.3f/s" % [old_drain, s.o2_drain_inside])
 	
 	# Glow red to green over 1.5 seconds
 	is_scrubber_highlighted = false
@@ -598,6 +606,8 @@ func _complete_power_unit_repair() -> void:
 	
 	var s = _get_survival()
 	if s:
+		if "is_power_unit_repaired" in s:
+			s.is_power_unit_repaired = true
 		if "solar_power_gain" in s:
 			var old_gain = s.solar_power_gain
 			s.solar_power_gain = max(1.5, s.solar_power_gain * power_output_boost)
